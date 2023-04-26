@@ -1,4 +1,6 @@
 use bevy::prelude::*;
+mod perlin_noise;
+pub use perlin_noise::*;
 
 
 fn main() {
@@ -35,7 +37,6 @@ fn sprite_movement(time: Res<Time>, mut sprite_position: Query<(&mut Direction, 
             Direction::Up => transform.translation.y += 150. * time.delta_seconds(),
             Direction::Down => transform.translation.y -= 150. * time.delta_seconds(),
         }
-
         if transform.translation.y > 200. {
             *logo = Direction::Down;
         } else if transform.translation.y < -200. {
@@ -43,3 +44,4 @@ fn sprite_movement(time: Res<Time>, mut sprite_position: Query<(&mut Direction, 
         }
     }
 }
+
