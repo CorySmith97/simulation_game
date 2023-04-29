@@ -26,9 +26,19 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>){
             ..default()
         },
         Direction::Up,
-    ));
+    )); 
+    
 }
+ fn open_map(mut commands: Commands, asset_server: Res<AssetServer>){
+     make_floor();
 
+    let background_image= asset_server.load("testing.png");
+    commands.spawn(SpriteBundle{
+         texture: background_image,
+         ..default()
+    });
+
+ }
 
 
 fn sprite_movement(time: Res<Time>, mut sprite_position: Query<(&mut Direction, &mut Transform)>) {
@@ -44,4 +54,7 @@ fn sprite_movement(time: Res<Time>, mut sprite_position: Query<(&mut Direction, 
         }
     }
 }
+
+
+
 
