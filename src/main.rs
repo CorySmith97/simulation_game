@@ -1,6 +1,4 @@
 use bevy::prelude::*;
-mod perlin_noise;
-pub use perlin_noise::*;
 
 
 fn main() {
@@ -39,8 +37,6 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>, mut texture_atl
     
 }
  fn open_map(mut commands: Commands, asset_server: Res<AssetServer>){
-     make_floor();
-
     let background_image= asset_server.load("testing.png");
     commands.spawn(SpriteBundle{
          texture: background_image,
