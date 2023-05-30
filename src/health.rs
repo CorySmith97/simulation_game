@@ -36,7 +36,7 @@ impl AntHealth {
 
 pub fn Health_Query(mut commands: Commands, mut query: Query<(Entity, &mut AntHealth)>) {
     for (entity, mut health) in query.iter_mut() {
-        println!("Health is {}", health.current_health);
+        println!("Health is {} out of {}", health.current_health, health.max_health);
     }
 }
 
