@@ -7,7 +7,7 @@ pub struct AntHealth {
 }
 
 impl AntHealth {
-    fn new(max_health: u32) -> Self {
+    pub fn new(max_health: u32) -> Self {
         AntHealth {
             current_health: max_health,
             max_health,
@@ -30,6 +30,21 @@ impl AntHealth {
         self.current_health += amount;
         if self.current_health > self.max_health {
             self.current_health = self.max_health;
+        }
+    }
+}
+
+pub fn Health_Query(mut commands: Commands, mut query: Query<(Entity, &mut AntHealth)>) {
+    for (entity, mut health) in query.iter_mut() {
+        println!("Health is {}", health.current_health);
+    }
+}
+
+pub fn damage_ant(mut commands: Commands, mut query: Query<(Entity, &mut AntHealth)>) {
+    for (entity, mut health) in query.iter_mut() {
+        health.take_damage(10);
+        if health.is_dead() {
+            commands.entity(entity).despawn();
         }
     }
 }
