@@ -32,12 +32,17 @@ impl AntHealth {
             self.current_health = self.max_health;
         }
     }
+    pub fn to_string(&self) -> String {
+        format!("{} / {}", self.current_health, self.max_health)
+    }
 }
 
-pub fn Health_Query(mut commands: Commands, mut query: Query<(Entity, &mut AntHealth)>) {
-    for (entity, mut health) in query.iter_mut() {
-        println!("Health is {} out of {}", health.current_health, health.max_health);
+pub fn Health_Query(mut commands: Commands, mut query: Query<&mut AntHealth> )-> String {
+    let mut health_string = String::new();    
+    for mut health in query.iter_mut() {
+        health_string = health.to_string();
     }
+    return health_string;
 }
 
 pub fn damage_ant(mut commands: Commands, mut query: Query<(Entity, &mut AntHealth)>) {
@@ -45,6 +50,17 @@ pub fn damage_ant(mut commands: Commands, mut query: Query<(Entity, &mut AntHeal
         health.take_damage(10);
         if health.is_dead() {
             commands.entity(entity).despawn();
+        }
+    }
+}
+
+pub fn press_a_to_damage_ant(mut commands: Commands, mut query: Query<(Entity, &mut AntHealth)>, keyboard_input: Res<Input<KeyCode>>) {
+    if keyboard_input.just_pressed(KeyCode::A) {
+        for (entity, mut health) in query.iter_mut() {
+            health.take_damage(10);
+            if health.is_dead() {
+                commands.entity(entity).despawn();
+            }
         }
     }
 }
