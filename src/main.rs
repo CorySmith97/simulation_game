@@ -33,7 +33,6 @@ pub fn setup(
 ) {
     let background_image = asset_server.load("ant_map.png");
     commands.spawn(Camera2dBundle::default()).insert(PanCam {
-        grab_buttons: vec![MouseButton::Middle],
         ..Default::default()
     });
     commands.spawn(SpriteBundle {

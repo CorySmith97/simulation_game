@@ -28,17 +28,6 @@ impl AntBundle {
 
 
 #[derive(Component)]
-pub enum AntType {
-    queen,
-    worker,
-    warrior,
-}
-
-pub struct AntDefinition {
-  pub texture_atlas: Handle<TextureAtlas>,
-}
-
-#[derive(Component)]
 pub struct AntCount {
     count: i32
 }
