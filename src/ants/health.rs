@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use super::{Ant};
+
 #[derive(Component)]
 pub struct AntHealth {
     current_health: u32,
@@ -37,12 +39,10 @@ impl AntHealth {
     }
 }
 
-pub fn Health_Query(mut commands: Commands, mut query: Query<&mut AntHealth> )-> String {
-    let mut health_string = String::new();    
-    for mut health in query.iter_mut() {
-        health_string = health.to_string();
+pub fn print_health_system(query: Query<(Entity, &AntHealth)>) {
+    for (entity,health) in query.iter() {
+        println!("Health: {}", health.to_string());
     }
-    return health_string;
 }
 
 pub fn damage_ant(mut commands: Commands, mut query: Query<(Entity, &mut AntHealth)>) {
@@ -54,13 +54,15 @@ pub fn damage_ant(mut commands: Commands, mut query: Query<(Entity, &mut AntHeal
     }
 }
 
-pub fn press_a_to_damage_ant(mut commands: Commands, mut query: Query<(Entity, &mut AntHealth)>, keyboard_input: Res<Input<KeyCode>>) {
+pub fn press_a_to_damage_ant(mut commands: Commands, mut health: Query<&mut AntHealth>, mut query: Query<Entity, With<Ant>>, keyboard_input: Res<Input<KeyCode>>) {
     if keyboard_input.just_pressed(KeyCode::A) {
-        for (entity, mut health) in query.iter_mut() {
+        for mut health in health.iter_mut() {
             health.take_damage(10);
             if health.is_dead() {
-                commands.entity(entity).despawn();
+                for entity in query.iter() {
+                    commands.entity(entity).remove::<Ant>();
+                }
             }
         }
     }
-}
+}   
