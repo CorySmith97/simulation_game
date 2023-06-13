@@ -22,7 +22,7 @@ impl RizzPoints {
     }
 }
 
-pub fn query_rizz(mut commands: Commands,rizz_points: Query<&mut RizzPoints>) {
+pub fn query_rizz(rizz_points: Query<&mut RizzPoints>) {
     for health in rizz_points.iter() {
         println!("Rizz points: {}", health.current_rizz);
     }

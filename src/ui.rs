@@ -27,7 +27,16 @@ pub fn click_sprite_open_health_window(
     }
 }
 
-pub fn main_bottom_menu(mut contexts: EguiContexts, mut egui_settings: ResMut<EguiSettings>) {
+pub fn main_bottom_menu(    
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
+    keyboard_input: Res<Input<KeyCode>>,
+    mut contexts: EguiContexts,
+    mut egui_settings: ResMut<EguiSettings>,
+    rizz: Query<&mut RizzPoints>,
+    )
+{
     let ctx = contexts.ctx_mut();
     
     egui_settings.scale_factor = 1.3;
@@ -41,11 +50,19 @@ pub fn main_bottom_menu(mut contexts: EguiContexts, mut egui_settings: ResMut<Eg
             });
             ui.separator();
 
-            egui::menu::menu_button(ui, "Rizz", |ui| {
-                if ui.button("Health").clicked() {
-                    println!("test");
+            egui::menu::menu_button(ui, "Spawn", |ui| {
+                if ui.button("Spawn Ant").clicked() {
+                    birth_ants(commands, asset_server, texture_atlases, keyboard_input);
                 }
             });
+            ui.separator();
+
+            egui::menu::menu_button(ui, "Rizz", |ui| {
+                if ui.button("Check Rizz").clicked() {
+                    query_rizz(rizz);
+                }
+            })
+
             
         });
     });

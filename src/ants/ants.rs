@@ -84,7 +84,6 @@ pub fn birth_ants(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
-    materials: ResMut<Assets<ColorMaterial>>,
     keyboard_input: Res<Input<KeyCode>>
 )  {
     let texture_handle = asset_server.load("ant.png");
@@ -96,19 +95,16 @@ pub fn birth_ants(
         Some(Vec2::new(1., 1.)),
         None,
     );
-    if keyboard_input.just_pressed(KeyCode::E){
-
-        let mut rand_thread = rand::thread_rng();
-        let x = rand_thread.gen_range(-200.0..200.00);
-        let y = rand_thread.gen_range(-200.0..200.00);
-            
-        let ant_sprite_sheet = SpriteSheetBundle {
-            texture_atlas: texture_atlases.add(texture_atlas.clone()),
-            transform: Transform::from_xyz(x, y, 1.),
-            ..Default::default()
-        };
-        let ant = AntBundle::new(100, 10, ant_sprite_sheet.clone());
-        commands.spawn(ant);
-        }
+    let mut rand_thread = rand::thread_rng();
+    let x = rand_thread.gen_range(-200.0..200.00);
+    let y = rand_thread.gen_range(-200.0..200.00);
+        
+    let ant_sprite_sheet = SpriteSheetBundle {
+        texture_atlas: texture_atlases.add(texture_atlas.clone()),
+        transform: Transform::from_xyz(x -1500., y -1500., 1.),
+        ..Default::default()
+    };
+    let ant = AntBundle::new(100, 10, ant_sprite_sheet.clone());
+    commands.spawn(ant);
 }
 

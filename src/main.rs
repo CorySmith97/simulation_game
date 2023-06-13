@@ -22,7 +22,6 @@ fn main() {
         .add_startup_system(setup)
         .add_system(main_bottom_menu)
         .add_system(move_player)
-        .add_system(birth_ants)
         .add_system(print_name_system)
         .add_system(ant_wander_system)
         .add_system(my_cursor_system)
