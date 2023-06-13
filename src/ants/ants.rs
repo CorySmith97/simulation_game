@@ -1,15 +1,27 @@
-use bevy::{prelude::*, utils::HashMap};
+use bevy::{prelude::*, utils::HashMap, window, sprite::collide_aabb::collide};
 use rand::Rng;
 use super::{AntHealth, RizzPoints};
+use bevy::sprite::MaterialMesh2dBundle;
 
 #[derive(Component)]
 pub struct Ant;
+
+#[derive(Component)]
+pub struct MoveCooldown {
+    pub direction: Vec2,
+    pub speed: f32,
+    pub time: Timer,
+    pub moving: bool,
+}
+
+
 
 #[derive(Bundle)]
 pub struct AntBundle {
     pub ant: Ant,
     pub health : AntHealth,
     pub rizz: RizzPoints,
+    pub movement: MoveCooldown,
 
     #[bundle]
     pub sprite : SpriteSheetBundle,
@@ -17,7 +29,17 @@ pub struct AntBundle {
 
 impl AntBundle {
     pub fn new( health: u32, rizz: i32, sprite: SpriteSheetBundle) -> AntBundle {
-        AntBundle { ant: Ant, health: AntHealth::new(health), rizz: RizzPoints { current_rizz: rizz}, sprite: sprite }
+  
+        AntBundle {
+            ant: Ant,
+            health: AntHealth::new(health),
+            rizz: RizzPoints { current_rizz: rizz},
+            movement: MoveCooldown{
+                direction: Vec2 { x: 1., y: 1. },
+                speed: 30.,
+                time: Timer::from_seconds(0.5, TimerMode::Repeating),
+                moving: false},
+            sprite: sprite }
     }
 
     pub fn spawn_ant(self, mut commands: Commands) {
@@ -33,20 +55,60 @@ pub struct AntCount {
 }
 
 
-pub fn ant_wander_system(mut query: Query<(&mut Transform, &AntHealth, With<Ant>)>, time : Res<Time>) {
-
-    for (mut transform, health, ant) in query.iter_mut(){
+pub fn ant_wander_system(mut query: Query<(&mut Transform, &AntHealth, &mut MoveCooldown, With<Ant>)>, time : Res<Time>) {
+    for (mut transform, health, mut movement, ant) in query.iter_mut(){
         let mut rand_thread = rand::thread_rng();
-        let rand_int: i32 = rand_thread.gen_range(1..4);
+        let mut rand_int: i32 = rand_thread.gen_range(1..5);
+        if movement.moving {
+            match rand_int {
+                1 => transform.translation.x += time.delta_seconds() * movement.speed,
+                2 =>transform.translation.y += time.delta_seconds() * movement.speed,
+                3 => transform.translation.x -= time.delta_seconds() * movement.speed,
+                4 => transform.translation.y -= time.delta_seconds() * movement.speed,
 
-        match rand_int {
-            1 => transform.translation.x += time.delta_seconds() * 200.,
-            2 =>transform.translation.y += time.delta_seconds() * 200.,
-            3 => transform.translation.x -= time.delta_seconds() * 200.,
-            4 => transform.translation.y -= time.delta_seconds() * 200.,
-
-            _ => println!("Nothing happens")
+                _ => println!("Nothing happens")
+            }            
+            if movement.time.tick(time.delta()).just_finished() {
+                movement.time.reset();
+                movement.moving =false;
+            }
+        } else {
+            movement.moving = true;
+            movement.time.set_duration(std::time::Duration::from_secs(1));
+            movement.time.reset();
         }
-        Timer::from_seconds(0.3, TimerMode::Repeating);
     }
 }
+
+pub fn birth_ants(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
+    materials: ResMut<Assets<ColorMaterial>>,
+    keyboard_input: Res<Input<KeyCode>>
+)  {
+    let texture_handle = asset_server.load("ant.png");
+    let texture_atlas = TextureAtlas::from_grid(
+        texture_handle,
+        Vec2::new(64.0, 64.0),
+        1,
+        1,
+        Some(Vec2::new(1., 1.)),
+        None,
+    );
+    if keyboard_input.just_pressed(KeyCode::E){
+
+        let mut rand_thread = rand::thread_rng();
+        let x = rand_thread.gen_range(-200.0..200.00);
+        let y = rand_thread.gen_range(-200.0..200.00);
+            
+        let ant_sprite_sheet = SpriteSheetBundle {
+            texture_atlas: texture_atlases.add(texture_atlas.clone()),
+            transform: Transform::from_xyz(x, y, 1.),
+            ..Default::default()
+        };
+        let ant = AntBundle::new(100, 10, ant_sprite_sheet.clone());
+        commands.spawn(ant);
+        }
+}
+
