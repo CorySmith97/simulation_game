@@ -39,6 +39,7 @@ pub fn query_rizz(mut commands: Commands,rizz_points: Query<&mut RizzPoints>) {
 
     // TODO query is a pub func, query anything that has ants 
     //     randomly select two ants to have an interaction
+pub fn query_rizz(rizz_points: Query<&mut RizzPoints>) {
     for health in rizz_points.iter() {
 
         let random_interaction = thread_rng().gen_range(3..4);
@@ -62,3 +63,4 @@ pub fn query_rizz(mut commands: Commands,rizz_points: Query<&mut RizzPoints>) {
         }
     }   
  }
+}

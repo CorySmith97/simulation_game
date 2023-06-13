@@ -12,6 +12,7 @@ pub struct RepdouctionRate {
 
 #[derive(Bundle)]
 pub struct QueenBundle {
+    pub name: Name,
     pub queen: Queen,
     pub rr: RepdouctionRate,
     pub health: AntHealth,
@@ -20,7 +21,7 @@ pub struct QueenBundle {
    
 
 impl QueenBundle {
-    pub fn new(rr: i32, health: u32, sprite: SpriteSheetBundle ) -> QueenBundle {
-        QueenBundle { queen: Queen {}, rr: RepdouctionRate { speed: rr}, health: AntHealth::new(health), sprite: sprite }
+    pub fn new(name: Name, rr: i32, health: u32, sprite: SpriteSheetBundle ) -> QueenBundle {
+        QueenBundle { name: name, queen: Queen {}, rr: RepdouctionRate { speed: rr}, health: AntHealth::new(health), sprite: sprite }
     }
 }
