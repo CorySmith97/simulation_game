@@ -9,5 +9,12 @@ pub struct WarriorAnt {
     sprite: SpriteBundle,
     position: (f32, f32),
     health: AntHealth,
-    rizz: RizzPoints,
+    //rizz: RizzPoints,
+}
+
+
+impl WarriorAnt {
+    pub fn new(name: String, health: u32, sprite: SpriteBundle, position: (f32, f32)) -> WarriorAnt {
+        WarriorAnt { ant: Ant {}, name, sprite, position, health: AntHealth::new(health) }
+    }
 }
