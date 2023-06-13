@@ -3,6 +3,15 @@ use rand::Rng;
 use super::{AntHealth, RizzPoints};
 use bevy::sprite::MaterialMesh2dBundle;
 
+
+pub struct AntPlugin;
+
+impl Plugin for AntPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_system(ant_wander_system);
+    }
+}
+
 #[derive(Component)]
 pub struct Ant;
 

@@ -5,6 +5,14 @@ use crate::ants::*;
 use bevy::sprite::MaterialMesh2dBundle;
 
 
+pub struct PersonalUIPlugin;
+
+impl Plugin for PersonalUIPlugin{
+    fn build(&self, app: &mut App) {
+        app.add_system(main_bottom_menu);
+    }
+}
+
 pub fn ui_health_query(query: Query<&AntHealth>, mut contexts: EguiContexts) {
     let health = query.single();
     egui::Window::new("Health").show(contexts.ctx_mut(), |ui| {
@@ -27,7 +35,7 @@ pub fn click_sprite_open_health_window(
     }
 }
 
-pub fn main_bottom_menu(    
+fn main_bottom_menu(    
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
@@ -39,9 +47,8 @@ pub fn main_bottom_menu(
 {
     let ctx = contexts.ctx_mut();
     
-    egui_settings.scale_factor = 1.3;
+    egui_settings.scale_factor = 1.5;
     egui::TopBottomPanel::bottom("top_panel").show(ctx, |ui| {
-        // The top panel is often a good place for a menu bar:
         egui::menu::bar(ui, |ui| {
             egui::menu::menu_button(ui, "File", |ui| {
                 if ui.button("Quit").clicked() {

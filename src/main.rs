@@ -19,11 +19,9 @@ fn main() {
         .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
         .add_plugin(EguiPlugin)
         .add_plugin(PanCamPlugin::default())
+        .add_plugin(AntPlugin)
+        .add_plugin(PersonalUIPlugin)
         .add_startup_system(setup)
-        .add_system(main_bottom_menu)
-        .add_system(move_player)
-        .add_system(print_name_system)
-        .add_system(ant_wander_system)
         .add_system(my_cursor_system)
         .run();
 }
