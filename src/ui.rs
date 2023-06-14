@@ -46,6 +46,7 @@ fn main_bottom_menu(
     )
 {
     let ctx = contexts.ctx_mut();
+
     
     egui_settings.scale_factor = 1.5;
     egui::TopBottomPanel::bottom("top_panel").show(ctx, |ui| {
@@ -59,8 +60,9 @@ fn main_bottom_menu(
 
             egui::menu::menu_button(ui, "Spawn", |ui| {
                 if ui.button("Spawn Ant").clicked() {
-                    birth_ants(commands, asset_server, texture_atlases, keyboard_input);
-                }
+                    birth_ants(commands, asset_server, texture_atlases, keyboard_input)
+                }                
+
             });
             ui.separator();
 
