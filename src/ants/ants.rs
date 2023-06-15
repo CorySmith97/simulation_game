@@ -1,10 +1,11 @@
-use bevy::{prelude::*, utils::HashMap, window, sprite::collide_aabb::collide};
+use bevy::prelude::*;
 use rand::Rng;
 use crate::TIME_STEP;
 use bevy::time::Stopwatch;
 use super::{AntHealth, RizzPoints};
 use bevy::sprite::MaterialMesh2dBundle;
 use std::time::Duration;
+use bevy::math::Vec3;
 
 
 pub struct AntPlugin;
@@ -48,7 +49,7 @@ impl AntBundle {
             rizz: RizzPoints { current_rizz: rizz},
             movement: MoveCooldown{
                 direction: Vec2 { x: 1., y: 1. },
-                speed: 2.,
+                speed: 5.,
                 time: Timer::from_seconds(0.5, TimerMode::Repeating),
                 moving: false},
             sprite: sprite }
@@ -60,42 +61,38 @@ impl AntBundle {
     }
 }
 
-#[derive(Component)]
-pub struct AntWalkTimer{
-    time: Stopwatch,
-}
-
-#[derive(Component)]
-pub struct AntCount {
-    count: i32
-}
-
-
-pub fn ant_wander_system(mut query: Query<(&mut Transform, &AntHealth, &mut MoveCooldown, With<Ant>)>, time : Res<Time>) {
-
-    for (mut transform, health, mut movement, ant) in query.iter_mut(){
-        let mut rand_thread = rand::thread_rng();
-        let mut rand_int: i32 = rand_thread.gen_range(1..20);
+pub fn ant_wander_system(
+    mut query: Query<(&mut Transform, &mut MoveCooldown, With<Ant>)>,
+    time: Res<Time>,
+) {
+    for (mut transform, mut movement, _) in query.iter_mut() {
         if movement.moving {
-            match rand_int {
-                1 => for _ in 1..120 {transform.translation.x += 1. * movement.speed * TIME_STEP},
-                2 => for _ in 1..120 {transform.translation.y += 1. *  movement.speed * TIME_STEP},
-                3 => for _ in 1..120 {transform.translation.x -= 1. * movement.speed * TIME_STEP},
-                4 => for _ in 1..120 {transform.translation.y -= 1. * movement.speed * TIME_STEP},
+            let movement_vector = movement.direction * movement.speed * time.delta_seconds();
+            transform.translation += movement_vector.extend(0.);
 
-                _ => () 
-            }            
             if movement.time.tick(time.delta()).just_finished() {
                 movement.time.reset();
-                movement.moving =false;
+                movement.moving = false;
             }
         } else {
             movement.moving = true;
-            movement.time.set_duration(std::time::Duration::from_secs(1));
+            movement.time.set_duration(Duration::from_secs(1));
             movement.time.reset();
+            movement.direction = random_direction();
         }
     }
 }
+
+fn random_direction() -> Vec2 {
+    let mut rng = rand::thread_rng();
+
+    Vec2::new(
+        rng.gen_range(-5.0..5.0),
+        rng.gen_range(-5.0..5.0),
+    )
+    .normalize()
+}
+
 
 pub fn birth_ants(
     mut commands: Commands,
