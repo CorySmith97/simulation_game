@@ -5,14 +5,8 @@ use rand::prelude::*;
 use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 use bevy_tweening::*;
 
-mod player;
-pub use player::*;
 mod ui;
 pub use ui::*;
-
-mod name;
-pub use name::*;
-
 mod ants;
 pub use ants::*;
 
