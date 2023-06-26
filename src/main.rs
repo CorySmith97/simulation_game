@@ -25,6 +25,7 @@ fn main() {
         .add_plugin(PersonalUIPlugin)
         .add_startup_system(setup)
         .add_system(my_cursor_system)
+        .add_system(move_ant.system())
         .run();
 }
 
@@ -92,4 +93,31 @@ pub fn setup(
     let warrior = WarriorAnt::new(150, warrrior_sprite);
 
     commands.spawn(warrior);
+
+    // Load the WorkerAnt sprite
+    let ant_texture = asset_server.load("assets\worker_ant.png");
+
+    // Create a new sprite using the ant texture
+    let ant_sprite = Sprite::new(Vec2::new(64.0, 64.0)); // Adjust the size as needed
+    let ant_material = materials.add(ant_texture.into());
+
+    // Spawn the ant entity with the sprite
+    commands.spawn_bundle(SpriteBundle {
+        sprite: ant_sprite,
+        material: ant_material,
+        transform: Transform::from_translation(Vec3::new(0.0, 0.0, 0.0)),
+        ..Default::default()
+    })
+    .insert(WorkerAnt {
+        position: Vec2::new(0.0, 0.0),
+        velocity: Vec2::new(1.0, 0.0), // Set an initial velocity
+    });
+
+}
+// System to move WorkerAnt based on its velocity.
+fn move_ant(time: Res<Time>, mut query: Query<(&mut Ant, &mut Transform)>) {
+    for (mut ant, mut transform) in query.iter_mut() {
+        ant.position += ant.velocity * time.delta_seconds();
+        transform.translation = ant.position.extend(0.0);
+    }
 }
