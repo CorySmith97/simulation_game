@@ -45,7 +45,7 @@ pub fn setup(
     });
     
     //queen test 
-    let texture_handle = asset_server.load("temp_queen.png");
+    let texture_handle = asset_server.load("smiley_face.png");
     let queen_atlas = TextureAtlas::from_grid(
         texture_handle,
         Vec2::new(64.0, 64.0),
@@ -55,7 +55,7 @@ pub fn setup(
         None,
     );       
     let queen_transform = Transform::from_translation(Vec3{x: -1500., y: -1500., z:1.})
-        .with_scale(Vec3::splat(4.0));
+        .with_scale(Vec3::splat(6.0));
 
     let queen_sprite = SpriteSheetBundle {
         texture_atlas: texture_atlases.add(queen_atlas),
@@ -68,10 +68,10 @@ pub fn setup(
 
 
     //warrior test
-    let w_texture_handle = asset_server.load("ant_warrior.png");
+    let w_texture_handle = asset_server.load("blue_hex.png");
     let texture_atlas = TextureAtlas::from_grid(
         w_texture_handle,
-        Vec2::new(64.0, 64.0),
+        Vec2::new(50.0, 58.0),
         1,
         1,
         Some(Vec2::new(1., 1.)),
@@ -79,7 +79,7 @@ pub fn setup(
     ); 
 
     let warrior_transform = Transform::from_translation(Vec3{x: 00., y: 00., z:2.})
-        .with_scale(Vec3::splat(2.0));
+        .with_scale(Vec3::splat(3.0));
 
 
     let warrrior_sprite = SpriteSheetBundle {
